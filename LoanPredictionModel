@@ -1,0 +1,53 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns
+from sklearn.experimental import enable_iterative_imputer
+from sklearn.impute import IterativeImputer
+from sklearn.model_selection import train_test_split
+
+train = pd.read_csv("C:/Users/mgarc/Downloads/LoanPredictionData/train_u6lujuX_CVtuZ9i.csv")
+test = pd.read_csv("C:/Users/mgarc/Downloads/LoanPredictionData/test_Y3wMUE5_7gLdaTN.csv")
+
+train.shape
+test.shape
+
+#data prreprocessing
+data = pd.concat([train, test])
+# dropping the unwanted column
+data.drop("Loan_ID", axis = 1, inplace=True)
+
+#identifing missiing values 
+data.isnull().sum()
+
+#imputing the missing values
+for i in [data]:
+  i["Gender"] = i["Gender"].fillna(data.Gender.dropna().mode()[0])
+  i["Married"] = i["Married"].fillna(data.Married.dropna().mode()[0])
+  i["Dependents"] = i["Dependents"].fillna(data.Dependents.dropna().mode()[0])
+  i["Self_Employed"] = i["Self_Employed"].fillna(data.Self_Employed.dropna().mode()[0])
+  i["Credit_History"] = i["Credit_History"].fillna(data.Credit_History.dropna().mode()[0])
+
+#use iterative imputer for filling missing values of LoanAmount and Loan_Amount_Term
+from sklearn.ensemble import RandomForestRegressor
+data1 = data.loc[:, ['LoanAmount', 'Loan_Ammount_Term']]
+
+imp = IterativeImputer(RandomForestRegressor(), max_iter = 10, random_state = 0)
+data1 = pd.DataFrame(imp.fit_transform(data1), columns=data1.columns)
+
+#mapping the categorical variables with the integers
+for i in [data]:
+  i["Gender"] = i["Gender"].map({"Male": 0, "Female": 1}).astype(int)
+  i["Married"] = i["Married"].map({'No': 0, "Yes": 1}).astype(int)
+  i["Education"] = i["Education"].map({"Not Graduate": 0, "Graduate": 1}).astype(int)
+  i["Self_Employed"] = i["Self_Employed"].map({'No': 0, "Yes": 1}).astype(int)
+  i["Credit_History"] = i["Credit_History"].astype(int)
+  
+  for i in [data]:
+    i["Property_Area"] = i["Property_Area"].map({"Urban": 0, "Rural": 1, "Semiurban": 2}).astype(int)    
+    i["Dependents"] = i["Dependents"].map({"0" : 0, "1": 1, "2": 2, "3+": 3})
+
+
+
+
