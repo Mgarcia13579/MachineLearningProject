@@ -1,6 +1,6 @@
 Loan Prediction Model Report
 
-How to Run
+How to Run Section
 
 The first step to running this project is to import the necessary libraries. Then import the test and training data set. After that you are free to run the entire file or run it by its different sections which are labeled with comments. I recommend running it in sections to accurately view all the sections of the model. To clarify, run each plotted graph individually to see them all. 
 
