@@ -1,3 +1,4 @@
+#import libraries
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,18 +9,23 @@ from sklearn.model_selection import cross_val_score
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from  sklearn import svm
+import time
 
-train = pd.read_csv("C:/Users/mgarc/Downloads/LoanPredictionData/train_u6lujuX_CVtuZ9i.csv")
-test = pd.read_csv("C:/Users/mgarc/Downloads/LoanPredictionData/test_Y3wMUE5_7gLdaTN.csv")
+#import datasets
+from google.colab import files
+uploaded = files.upload()
 
+train = pd.read_csv("train_u6lujuX_CVtuZ9i.csv")
+test = pd.read_csv("test_Y3wMUE5_7gLdaTN.csv")
+#preview size of dataset
 train.shape
 test.shape
 
-#data prreprocessing
+#data preprocessing
 data = pd.concat([train, test])
 
 data.head()
-# ddata quality and finding missing values
+# data quality and finding missing values
 data.info()
 
 data.isnull().sum()
@@ -91,9 +97,11 @@ train_data
 #Convert some object data type to int64
 gender_stat = {"Female": 0, "Male": 1}
 yes_no_stat = {'No' : 0,'Yes' : 1}
+y_n_stat = {'N' : 0,'Y' : 1}
 dependents_stat = {'0':0,'1':1,'2':2,'3+':3}
 education_stat = {'Not Graduate' : 0, 'Graduate' : 1}
 property_stat = {'Semiurban' : 0, 'Urban' : 1,'Rural' : 2}
+
 
 train_data['Gender'] = train_data['Gender'].replace(gender_stat)
 train_data['Married'] = train_data['Married'].replace(yes_no_stat)
@@ -101,9 +109,13 @@ train_data['Dependents'] = train_data['Dependents'].replace(dependents_stat)
 train_data['Education'] = train_data['Education'].replace(education_stat)
 train_data['Self_Employed'] = train_data['Self_Employed'].replace(yes_no_stat)
 train_data['Property_Area'] = train_data['Property_Area'].replace(property_stat)
+train_data['Loan_Status'] = train_data['Loan_Status'].replace(y_n_stat)
+
+
 
 data.info()
 data.isnull().sum()
+train_data = train_data.dropna()
 
 #Separateing features and the target
 x = train_data.iloc[:,1:12]
@@ -116,30 +128,46 @@ score = []
 
 #using gradient boosting
 GBC = GradientBoostingClassifier()
+GBCt0 = time.time()
 scores = cross_val_score(GBC, x, y,cv=5)
+GBCft = time.time() - GBCt0
+
 score.append(scores.mean())
 print('The accuration of classification is %.2f%%' %(scores.mean()*100))
 
 #using random forest
 RFC = RandomForestClassifier(n_estimators=10)
+RFCt0 = time.time()
 scores = cross_val_score(RFC, x, y,cv=5)
+RFCft = time.time() - RFCt0
+
 score.append(scores.mean())
 print('The accuration of classification is %.2f%%' %(scores.mean()*100))
 
 #using decision tree
 DTC = DecisionTreeClassifier()
+DTCt0 = time.time()
 scores = cross_val_score(DTC, x, y,cv=5)
+DTCft = time.time() - DTCt0
+
 score.append(scores.mean())
 print('The accuration of classification is %.2f%%' %(scores.mean()*100))
 
 #using kneighbors
 KNC = KNeighborsClassifier()
+KNCt0 = time.time()
 scores = cross_val_score(KNC, x, y,cv=5)
+KNCft = time.time() - KNCt0
+
 score.append(scores.mean())
 print('The accuration of classification is %.2f%%' %(scores.mean()*100))
 
-SVM  =  svm.LinearSVC(max_iter=5000)
+#using SVM
+SVM  =  svm.LinearSVC(max_iter= 5000)
+SVMt0 = time.time()
 scores = cross_val_score(SVM, x, y,cv=5)
+SVMft = time.time() - SVMt0
+
 score.append(scores.mean())
 print('The accuration of classification is %.2f%%' %(scores.mean()*100))
 
@@ -149,8 +177,22 @@ plt.xlabel('Score')
 plt.title('Classification Performance')
 plt.show()
 
+#print("The training time for gradient boosting is:", GBCft)
+#print("The training time for Random Forest is:", RFCft)
+#print("The training time for decision tree is:", DTCft)
+#print("The training time for kneighbors is:", KNCft)
+#print("The training time for SVM is:", SVMft)
 
+#showing the training time of each model in a bar graph 
 
+Model = ['Gradient boosting', 'Random Forest', 'Desicion Tree', 'Kneighbors', 'SVM']
+Model_training_time = [GBCft, RFCft, DTCft, KNCft, SVMft]
+
+plt.bar( Model, Model_training_time)
+plt.title('Model training time')
+plt.xlabel('Model')
+plt.ylabel('Training time')
+plt.show()
 
 
 
