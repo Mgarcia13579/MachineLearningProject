@@ -81,8 +81,11 @@ The model that clearly performed the best was the Decision tree model because it
 References  
 
 Chatterjee, Debdatta. “Loan Prediction Problem Dataset.” Kaggle, 12 Mar. 2019, www.kaggle.com/datasets/altruistdelhite04/loan-prediction-problem-dataset?select=train_u6lujuX_CVtuZ9i.csv. 
+
 Saini, Anshul. “Gradient Boosting Algorithm: A Complete Guide for Beginners.” Analytics Vidhya, 14 Oct. 2021, www.analyticsvidhya.com/blog/2021/09/gradient-boosting-algorithm-a-complete-guide-for-beginners/. 
+
 Simplilearn. “Loan Approval Prediction Using Machine Learning | Machine Learning Projects 2022 | Simplilearn.” YouTube, 20 Sept. 2022, www.youtube.com/watch?v=x2NrPeHSPU0&ab_channel=Simplilearn. 
+
 Stecanella, Bruno. “Support Vector Machines (SVM) Algorithm Explained.” MonkeyLearn Blog, 22 June 2017, monkeylearn.com/blog/introduction-to-support-vector-machines-svm/. 
 
 
